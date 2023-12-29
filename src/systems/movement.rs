@@ -1,5 +1,5 @@
 use crate::prelude::*;
-use legion::{world::SubWorld, systems::CommandBuffer};
+use legion::{systems::CommandBuffer, world::SubWorld};
 
 #[system(for_each)]
 #[read_component(Player)]
@@ -9,13 +9,15 @@ pub fn movement(
 	#[resource] map: &Map,
 	#[resource] camera: &mut Camera,
 	ecs: &mut SubWorld,
-	commands: &mut CommandBuffer
+	commands: &mut CommandBuffer,
 ) {
 	if map.can_enter_tile(want_move.destination) {
 		commands.add_component(want_move.entity, want_move.destination);
-		if ecs.entry_ref(want_move.entity)
+		if ecs
+			.entry_ref(want_move.entity)
 			.unwrap()
-			.get_component::<Player>().is_ok()
+			.get_component::<Player>()
+			.is_ok()
 		{
 			camera.on_player_move(want_move.destination);
 		}
